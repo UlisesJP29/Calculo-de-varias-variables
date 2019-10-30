@@ -1,0 +1,183 @@
+from sympy import *
+from sympy.physics.vector import ReferenceFrame
+from sympy.physics.vector import dot
+import sympy as sp
+import math
+from fractions import Fraction as frac
+from tkinter import *
+from tkinter.messagebox import *
+t = symbols('t')
+C = ReferenceFrame('C')
+
+def show_answer():
+    comp1 = num1.get()*C.x
+    Ans1 = comp1.diff(t, C)
+    Ans1V = Ans1
+    
+    comp2 = num2.get()*C.y
+    Ans2 = comp2.diff(t, C)
+    Ans2V = Ans2
+    
+    comp3 = num3.get()*C.z
+    Ans3 = comp3.diff(t, C)
+    Ans3V = Ans3
+    
+    AnsV = Ans1V + Ans2V + Ans3V
+    blank.insert(0, AnsV)
+
+def diff_2():
+    comp1 = num1.get()*C.x
+    Ans1V = comp1.diff(t, C)
+    Ans1A = Ans1V.diff(t, C)
+    num4 = Label(main, text=Ans1V)
+    
+    comp2 = num2.get()*C.y
+    Ans2V = comp2.diff(t, C)
+    Ans2A = Ans2V.diff(t, C)
+    num5 = Label(main, text=Ans2V)
+    
+    comp3 = num3.get()*C.z
+    Ans3V = comp3.diff(t, C)
+    Ans3A = Ans3V.diff(t, C)
+    num6 = Label(main, text=Ans3V)
+    
+    AnsA = Ans1A + Ans2A + Ans3A   
+    blank1.insert(0, AnsA)
+    blank4.insert(0, Ans1A)
+    blank5.insert(0, Ans2A)
+    blank6.insert(0, Ans3A)
+    
+def T_N_k():
+    #Procedure to find T:
+    T_val = num4.get()
+    comp1 = num1.get()
+    Ans1V = diff(comp1)
+    Exp1V = Ans1V.subs(t, int(T_val))
+    quad1 = math.pow(Exp1V, 2)
+    
+    comp2 = num2.get()
+    Ans2V = diff(comp2)
+    Exp2V = int(Ans2V.subs(t, int(T_val)))
+    quad2 = math.pow(Exp2V, 2)
+    
+    comp3 = num3.get()
+    Ans3V = diff(comp3)
+    Exp3V = int(Ans3V.subs(t, int(T_val)))
+    quad3 = math.pow(Exp3V, 2)
+    
+    Magv_Vec = sp.sqrt(Ans1V + Ans2V + Ans3V)
+    mag_V = sp.sqrt(quad1 + quad2 + quad3)
+    T1 = (Ans1V/mag_V)
+    str1 = "*C.x"
+    T1N = str(T1) + str1
+    T2 = (Ans2V/mag_V)
+    str2 = "*C.y"
+    T2N = str(T2) + str2
+    T3 = (Ans3V/mag_V)
+    str3 = "*C.z"
+    T3N = str(T3) + str3
+    Unit_Tan_Vec = T1N + T2N + T3N
+    
+    blank7.insert(0, "%.3f" % mag_V)
+    blank8.insert(0, Unit_Tan_Vec)
+    #End
+    
+    
+    #Procedure to find N:
+    T1T = diff(T1)
+    #T1T = diff(T1prim)
+    T1TE = T1T.subs(t, int(T_val)) #TypeError: int() argument must be a string, a bytes-like object or a number, not 'Vector'
+    TQ1 = math.pow(T1TE, 2)
+    
+    T2T = diff(T2)
+    #T2T = diff(T2prim)
+    T2TE = T2T.subs(t, int(T_val))
+    TQ2 = math.pow(T2TE, 2)
+    
+    T3T = diff(T3)
+    #T3T = diff(T3prim)
+    T3TE = T3T.subs(t, int(T_val))
+    TQ3 = math.pow(T3TE, 2)
+    
+    Magt_Vec = sp.sqrt(T1T + T2T + T3T)
+    mag_T = sp.sqrt(TQ1 + TQ2 + TQ3)
+    N1 = (T1T/mag_T)*C.x
+    N2 = (T2T/mag_T)*C.y
+    N3 = (T3T/mag_T)*C.z
+    Prin_Norm_Vec = N1 + N2 + N3
+    
+    blank9.insert(0, "%.3f" % mag_T)
+    blank10.insert(0, Prin_Norm_Vec)
+    #End
+    
+    
+    #Procedure to find k:
+    Curve = (Prin_Norm_Vec/mag_V)
+    blank11.insert(0, Curve)
+    #End
+        
+        
+main = Tk()
+main.geometry('400x450')
+main.resizable(False, False)
+main.title('Encontrando T, N, y k')
+Label(main, text = "Ingrese el Componente de Posicion en 'i': ").grid(row=0, pady=(25,0))
+Label(main, text = "Ingrese el Componente de Posicion en 'j': ").grid(row=1)
+Label(main, text = "Ingrese el Componente de Posicion en 'k': ").grid(row=2)
+Label(main, text = "Elija el Valor deseado de tiempo 't': ").grid(row=3)
+Label(main, text = "El Vector de Velocidad es: ").grid(row=4)
+
+Label(main, text = "El Componente de Aceleracion en 'i' es: ").grid(row=5, pady=(25,0))
+Label(main, text = "El Componente de Aceleracion en 'j' es: ").grid(row=6)
+Label(main, text = "El Componente de Aceleracion en 'k' es: ").grid(row=7)
+Label(main, text = "El Vector de Aceleracion es: ").grid(row=8)
+
+Label(main, text = "Magnitud de Velocidad en 't': ").grid(row=9, pady=(25,0))
+Label(main, text = "Vector Unitario Tangente: ").grid(row=10)
+
+Label(main, text = "Magnitud de Vector Unitario Tangente en 't': ").grid(row=11)
+Label(main, text = "Vector Normal Principal: ").grid(row=12)
+
+Label(main, text = "Vector de la Curvatura: ").grid(row=13)
+
+num1 = Entry(main)
+num2 = Entry(main)
+num3 = Entry(main)
+blank = Entry(main)
+
+blank4 = Entry(main)
+blank5 = Entry(main)
+blank6 = Entry(main)
+num4 = Entry(main)
+blank7 = Entry(main)
+blank8 = Entry(main)
+blank9 = Entry(main)
+blank10 = Entry(main)
+blank11 = Entry(main)
+blank12 = Entry(main)
+blank1 = Entry(main)
+
+num1.grid(row=0, column=1, pady=(25,0))
+num2.grid(row=1, column=1)
+num3.grid(row=2, column=1)
+blank.grid(row=4, column=1) #Velocity Vector
+
+num4.grid(row=3, column=1) #X component A
+blank5.grid(row=6, column=1) #Y component A
+blank6.grid(row=7, column=1) #Z component A
+blank1.grid(row=8, column=1) #Acceleration Vector
+
+blank4.grid(row=5, column=1, pady=(25,0)) #Value of T
+blank7.grid(row=9,column=1, pady=(25,0)) #Magnitude of Velocity
+blank8.grid(row=10, column=1) #Unit Tangent Vector
+blank9.grid(row=11, column=1) #Magnitude of T
+blank10.grid(row=12, column=1) #Principal Unit Vector
+blank11.grid(row=13, column=1) #Curvature of the Vector
+
+
+Button(main, text='Cerrar', command=main.destroy).grid(row=14, column=0, pady=2)
+Button(main, text='Calcular!', command=show_answer).grid(row=15, column=0, pady=2)
+Button(main, text='Segunda Derivada!', command=diff_2).grid(row=14, column=1, pady=2)
+Button(main, text='Encuentra T, N, y k!', command=T_N_k).grid(row=15, column=1, pady=2)
+
+mainloop()
